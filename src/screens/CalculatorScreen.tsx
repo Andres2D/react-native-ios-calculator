@@ -43,6 +43,18 @@ export const CalculatorScreen = () => {
 
   }
 
+  const btnDel = () => {
+    if(number.length > 1) {
+      if(number.length === 2 && number.includes('-')) {
+        setNumber('0');
+      }else {
+        setNumber(number.slice(0, -1 ));
+      }
+    }else {
+      setNumber('0');
+    }
+  }
+
   const positiveNegavitve = () => {
     number.includes('-') ? setNumber(number.replace('-', '')) : setNumber(`-${number}`);
   }
@@ -62,7 +74,7 @@ export const CalculatorScreen = () => {
       <View style={styles.row}>
         <ButtonCalc text="C" color="#9B9B9B" action={clear}/>
         <ButtonCalc text="+/-" color="#9B9B9B" action={positiveNegavitve}/>
-        <ButtonCalc text="del" color="#9B9B9B" action={clear}/>
+        <ButtonCalc text="del" color="#9B9B9B" action={btnDel}/>
         <ButtonCalc text="/" color="#FF9427" action={clear} />
       </View>
 
