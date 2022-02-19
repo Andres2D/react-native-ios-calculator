@@ -13,7 +13,38 @@ export const CalculatorScreen = () => {
   }
 
   const buildNumber = (numberText: string) => {
-    setNumber(number + numberText);
+    
+    // not enable double dot
+    if(number.includes('.') && numberText === '.') return;
+
+    if(number.startsWith('0') || number.startsWith('-0')) {
+
+      if(numberText === '.') {
+        setNumber(number + numberText);
+        
+        // Evaluate if is another cero and one dot
+      }else if(numberText === '0' && number.includes('.')) {
+        setNumber(number + numberText);
+      
+        // Evaluate if is different of cero and doesn't have a dot
+      }else if(numberText !== '0' && !number.includes('.')) {
+        setNumber(numberText);
+        
+        // avoid 00000.0
+      } else if(numberText === '0' && !number.includes('.')){
+        setNumber(number);
+      }else {
+        setNumber(number + numberText);
+      }
+
+    } else {
+      setNumber(number + numberText);
+    }
+
+  }
+
+  const positiveNegavitve = () => {
+    number.includes('-') ? setNumber(number.replace('-', '')) : setNumber(`-${number}`);
   }
 
   return (
@@ -30,7 +61,7 @@ export const CalculatorScreen = () => {
       {/* Buttons rows */}
       <View style={styles.row}>
         <ButtonCalc text="C" color="#9B9B9B" action={clear}/>
-        <ButtonCalc text="+/-" color="#9B9B9B" action={clear}/>
+        <ButtonCalc text="+/-" color="#9B9B9B" action={positiveNegavitve}/>
         <ButtonCalc text="del" color="#9B9B9B" action={clear}/>
         <ButtonCalc text="/" color="#FF9427" action={clear} />
       </View>
@@ -61,8 +92,8 @@ export const CalculatorScreen = () => {
 
       {/* Buttons rows */}
       <View style={styles.row}>
-        <ButtonCalc text="0" flexBut action={clear} />
-        <ButtonCalc text="." action={clear} />
+        <ButtonCalc text="0" flexBut action={buildNumber} />
+        <ButtonCalc text="." action={buildNumber} />
         <ButtonCalc text="=" color="#FF9427" action={clear} />
       </View>
       
