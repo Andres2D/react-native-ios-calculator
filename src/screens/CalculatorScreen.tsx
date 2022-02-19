@@ -1,15 +1,22 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { View, Text } from 'react-native';
 import { ButtonCalc } from '../components/ButtonCalc';
 import { styles } from '../theme/appTheme';
+
+enum Operators {
+  sum, subs, mult, div
+}
 
 export const CalculatorScreen = () => {
 
   const [lastNumber, setLastNumber] = useState('0');
   const [number, setNumber] = useState('0');
 
+  const lastOperation = useRef<Operators>();
+
   const clear = () => {
     setNumber('0');
+    setLastNumber('0');
   }
 
   const buildNumber = (numberText: string) => {
@@ -59,9 +66,41 @@ export const CalculatorScreen = () => {
     number.includes('-') ? setNumber(number.replace('-', '')) : setNumber(`-${number}`);
   }
 
+  const changeNumByLast = () => {
+    if(number.endsWith('.')) {
+      setLastNumber(number.slice(0, -1));
+    }
+    setLastNumber(number);
+    setNumber('0');
+  }
+
+  const btnDiv = () => {
+    changeNumByLast();
+    lastOperation.current = Operators.div;
+  }
+
+  const btnMult = () => {
+    changeNumByLast();
+    lastOperation.current = Operators.mult;
+  }
+
+  const btnSubs = () => {
+    changeNumByLast();
+    lastOperation.current = Operators.subs;
+  }
+
+  const btnSum = () => {
+    changeNumByLast();
+    lastOperation.current = Operators.sum;
+  }
+
   return (
     <View style={styles.calcContainer}>
-      <Text style={styles.smallResult}>{ lastNumber }</Text>
+      {
+        (lastNumber !== '0') && (
+          <Text style={styles.smallResult}>{ lastNumber }</Text>
+        )
+      }
       <Text 
         style={styles.result}
         numberOfLines={1}
@@ -75,7 +114,7 @@ export const CalculatorScreen = () => {
         <ButtonCalc text="C" color="#9B9B9B" action={clear}/>
         <ButtonCalc text="+/-" color="#9B9B9B" action={positiveNegavitve}/>
         <ButtonCalc text="del" color="#9B9B9B" action={btnDel}/>
-        <ButtonCalc text="/" color="#FF9427" action={clear} />
+        <ButtonCalc text="/" color="#FF9427" action={btnDiv} />
       </View>
 
       {/* Buttons rows */}
@@ -83,7 +122,7 @@ export const CalculatorScreen = () => {
         <ButtonCalc text="7" action={buildNumber}/>
         <ButtonCalc text="8" action={buildNumber}/>
         <ButtonCalc text="9" action={buildNumber}/>
-        <ButtonCalc text="X" color="#FF9427" action={clear} />
+        <ButtonCalc text="X" color="#FF9427" action={btnMult} />
       </View>
 
       {/* Buttons rows */}
@@ -91,7 +130,7 @@ export const CalculatorScreen = () => {
         <ButtonCalc text="4" action={buildNumber}/>
         <ButtonCalc text="5" action={buildNumber}/>
         <ButtonCalc text="6" action={buildNumber}/>
-        <ButtonCalc text="-" color="#FF9427" action={clear} />
+        <ButtonCalc text="-" color="#FF9427" action={btnSubs} />
       </View>
 
       {/* Buttons rows */}
@@ -99,7 +138,7 @@ export const CalculatorScreen = () => {
         <ButtonCalc text="1" action={buildNumber}/>
         <ButtonCalc text="2" action={buildNumber}/>
         <ButtonCalc text="3" action={buildNumber}/>
-        <ButtonCalc text="+" color="#FF9427" action={clear} />
+        <ButtonCalc text="+" color="#FF9427" action={btnSum} />
       </View>
 
       {/* Buttons rows */}
