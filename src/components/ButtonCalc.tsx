@@ -3,13 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface Props {
     text: string,
+    action: (numberText: string) => void,
     color?: string,
-    flexBut?: boolean
+    flexBut?: boolean,
 }
 
-export const ButtonCalc = ({text, color = '#2D2D2D', flexBut = false}: Props) => {
+export const ButtonCalc = ({text, color = '#2D2D2D', flexBut = false, action}: Props) => {
   return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => action(text)}
+      >
         <View style={{
                 ...styles.button,
                 backgroundColor: color,
